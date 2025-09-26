@@ -10,8 +10,7 @@ import java.util.Set;
 
 @Entity(name = "Course")
 @Table(name = "course")
-@Getter
-@Setter
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -23,22 +22,30 @@ public class Course implements Serializable {
     @EqualsAndHashCode.Include
     @Id
     @Column(name = "course_id", length = 10, nullable = false)
-    private String courseId;            // e.g. C1001
+    private String courseId;
 
     @Column(name = "name", nullable = false, unique = true)
     private String courseName;
 
     @Column(name = "duration", nullable = false)
-    private String duration;            // e.g. "12 weeks", "3 months"
+    private String duration;
 
     @Column(name = "fee", nullable = false, precision = 12, scale = 2)
-    private BigDecimal fee;             // LKR amount
+    private BigDecimal fee;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Enrollment> enrollments = new HashSet<>();
 
-    // Convenience helpers to keep both sides of the association in sync
+    // ✅ explicit 4-arg ctor used by controller
+    public Course(String courseId, String courseName, String duration, BigDecimal fee) {
+        this.courseId = courseId;
+        this.courseName = courseName;
+        this.duration = duration;
+        this.fee = fee;
+    }
+
+    // helpers
     public void addEnrollment(Enrollment e) {
         if (e == null) return;
         enrollments.add(e);
