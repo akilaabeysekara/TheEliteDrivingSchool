@@ -232,6 +232,25 @@ public class AppUserBOImpl implements AppUserBO {
         }
     }
 
+    @Override
+    public String findRoleByLoginId(String usernameOrEmail) throws Exception {
+        if (usernameOrEmail == null) return null;
+
+        try (Session session = FactoryConfiguration.getInstance().getSession()) {
+            String role = session.createQuery(
+                            "select u.userRole from " + ENTITY + " u " +
+                                    "where lower(u.userName) = :id or lower(u.email) = :id",
+                            String.class
+                    ).setParameter("id", usernameOrEmail.trim().toLowerCase())
+                    .setMaxResults(1)
+                    .uniqueResult();
+
+            return role != null ? role : null;
+        } catch (Exception e) {
+            throw new Exception("Failed to find user role", e);
+        }
+    }
+
     // ---------- utils ----------
 
     private String defaultRole(String role) {

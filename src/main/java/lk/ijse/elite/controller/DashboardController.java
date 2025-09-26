@@ -111,17 +111,6 @@ public class DashboardController {
         }
     }
 
-    private void applyRoleVisibility(String role) {
-        if ("RECEPTIONIST".equalsIgnoreCase(role)) {
-            btnUser.setVisible(false);
-            btnInstructors.setVisible(false);
-            btnCourses.setVisible(false);
-            // btnUser.setManaged(false);
-            // btnInstructors.setManaged(false);
-            // btnCourses.setManaged(false);
-        }
-    }
-
 
     private void navigateTo(String path) {
         try {
@@ -156,8 +145,6 @@ public class DashboardController {
         btnDashboard.setStyle(ACTIVE_STYLE);
         lblDate.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")));
 
-        String role = SessionContext.getRole();
-        applyRoleVisibility(role);
     }
 
     private void resetButtons() {

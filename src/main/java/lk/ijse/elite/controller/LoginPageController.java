@@ -12,6 +12,7 @@ import javafx.scene.layout.AnchorPane;
 import lk.ijse.elite.bo.BOFactory;
 import lk.ijse.elite.bo.BOFactory.BOType;
 import lk.ijse.elite.bo.custom.AppUserBO;
+import lk.ijse.elite.security.SessionContext;
 
 import java.io.IOException;
 
@@ -63,6 +64,8 @@ public class LoginPageController {
             // Accept username OR email in the same field
             boolean ok = appUserBO.verifyLogin(username, password);
             if (ok) {
+                String role = appUserBO.findRoleByLoginId(usernameOrEmail);
+                SessionContext.setRole(role);
                 navigateTo("/view/Dashboard.fxml");
             } else {
                 new Alert(Alert.AlertType.ERROR, "Invalid credentials!", ButtonType.OK).show();
