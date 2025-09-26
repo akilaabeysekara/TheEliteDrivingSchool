@@ -109,7 +109,7 @@ public class StudentPageController implements Initializable {
         new Alert(Alert.AlertType.ERROR, message).show();
     }
 
-    // ================= Hibernate ops =================
+    // ================= Hibernate ops (standard CRUD screens) =================
 
     private void loadTableData() throws Exception {
         try (Session session = FactoryConfiguration.getInstance().getSession()) {
@@ -203,6 +203,49 @@ public class StudentPageController implements Initializable {
         }
     }
 
+    // ================= HQL tasks (per brief) =================
+
+    /** Students who are registered in ALL available courses — DTO projection. */
+    private List<StudentDTO> findStudentsInAllCoursesDTO() throws Exception {
+        try (Session s = FactoryConfiguration.getInstance().getSession()) {
+            return s.createQuery(
+                "select new lk.ijse.elite.dto.StudentDTO(" +
+                " s.studentId, s.studentName, s.studentNic, s.studentEmail, s.studentPhone, s.studentAddress) " +
+                "from Student s join s.enrollments e " +
+                "group by s " +
+                "having count(distinct e.course.courseId) = (select count(c) from Course c)",
+                StudentDTO.class
+            ).getResultList();
+        }
+    }
+
+    /** Eagerly fetch enrollments + courses (solves N+1). */
+    private List<Student> findAllWithEnrollmentsAndCourses() throws Exception {
+        try (Session s = FactoryConfiguration.getInstance().getSession()) {
+            return s.createQuery(
+                "select distinct s " +
+                "from Student s " +
+                "left join fetch s.enrollments e " +
+                "left join fetch e.course",
+                Student.class
+            ).getResultList();
+        }
+    }
+
+    /** Map entities (with fetched relations) to  table’s DTO. */
+    private List<StudentDTO> toDTOs(List<Student> entities) {
+        return entities.stream()
+                .map(s -> new StudentDTO(
+                        s.getStudentId(),
+                        s.getStudentName(),
+                        s.getStudentNic(),
+                        s.getStudentEmail(),
+                        s.getStudentPhone(),
+                        s.getStudentAddress()
+                ))
+                .toList();
+    }
+
     // ================= Actions (match FXML) =================
 
     public void btnStudentSaveOnAction(ActionEvent event) {
@@ -281,6 +324,28 @@ public class StudentPageController implements Initializable {
             btnSave.setDisable(true);
             btnUpdate.setDisable(false);
             btnDelete.setDisable(false);
+        }
+    }
+
+    // buttons/menu for new two HQL tasks ===
+    public void btnShowAllCourseStudentsOnAction(ActionEvent e) {
+        try {
+            var rows = findStudentsInAllCoursesDTO();
+            tblCustomer.setItems(FXCollections.observableArrayList(rows));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            showError("Failed to load students in all courses.\n" + ex.getMessage());
+        }
+    }
+
+    public void btnShowAllWithEnrollmentsOnAction(ActionEvent e) {
+        try {
+            var entities = findAllWithEnrollmentsAndCourses();
+            var rows = toDTOs(entities);
+            tblCustomer.setItems(FXCollections.observableArrayList(rows));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            showError("Failed to load students with enrollments.\n" + ex.getMessage());
         }
     }
 
