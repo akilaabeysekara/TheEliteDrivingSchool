@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "student")
@@ -32,4 +34,7 @@ public class Student implements Serializable {
 
     @Column(name = "address", nullable = false)
     private String studentAddress;
+
+    @OneToMany(mappedBy="student", cascade=CascadeType.ALL, orphanRemoval=true)
+    private Set<Enrollment> enrollments = new HashSet<>();
 }
