@@ -4,6 +4,9 @@ import lk.ijse.elite.entity.AppUser;
 import lk.ijse.elite.entity.Course;
 import lk.ijse.elite.entity.Instructor;
 import lk.ijse.elite.entity.Student;
+import lk.ijse.elite.entity.Enrollment;
+import lk.ijse.elite.entity.EnrollmentId;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -14,16 +17,25 @@ public class FactoryConfiguration {
 
     private FactoryConfiguration() {
         try {
-            Configuration configuration = new Configuration().configure();
+            // Loads hibernate.cfg.xml from classpath
+            Configuration cfg = new Configuration().configure();
 
-            // Register annotated entities
-            configuration.addAnnotatedClass(AppUser.class);
-            configuration.addAnnotatedClass(Student.class);
-            configuration.addAnnotatedClass(Course.class);
-            configuration.addAnnotatedClass(Instructor.class);
+            // ✅ Register ALL annotated classes explicitly
+            cfg.addAnnotatedClass(AppUser.class);
+            cfg.addAnnotatedClass(Student.class);
+            cfg.addAnnotatedClass(Course.class);
+            cfg.addAnnotatedClass(Instructor.class);
 
+            // --- Enrollments (fixes "not an @Entity" error) ---
+            cfg.addAnnotatedClass(Enrollment.class);
+            cfg.addAnnotatedClass(EnrollmentId.class); // @Embeddable
 
-            sessionFactory = configuration.buildSessionFactory();
+            // If add more entities later, register them here as well:
+            // cfg.addAnnotatedClass(Lesson.class);
+            // cfg.addAnnotatedClass(Payment.class);
+            // ...
+
+            sessionFactory = cfg.buildSessionFactory();
         } catch (Exception e) {
             throw new RuntimeException("Failed to build SessionFactory", e);
         }
@@ -52,7 +64,6 @@ public class FactoryConfiguration {
         return sessionFactory.getCurrentSession();
     }
 
-    // Optional: safely close SessionFactory at shutdown
     public void shutdown() {
         if (sessionFactory != null && !sessionFactory.isClosed()) {
             sessionFactory.close();
