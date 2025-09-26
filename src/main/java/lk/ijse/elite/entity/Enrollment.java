@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-@Entity
+@Entity(name = "Enrollment")
 @Table(name="enrollment")
 public class Enrollment {
     @EmbeddedId private EnrollmentId id = new EnrollmentId();

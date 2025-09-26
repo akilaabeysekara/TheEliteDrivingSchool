@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
 import java.io.Serializable;
 
-@Entity
+@Entity(name = "AppUser")
 @Table(name = "app_user")
 @AllArgsConstructor
 @NoArgsConstructor
