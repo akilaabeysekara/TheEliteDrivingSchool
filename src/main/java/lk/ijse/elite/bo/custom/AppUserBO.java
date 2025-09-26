@@ -28,5 +28,7 @@ public interface AppUserBO extends SuperBO {
 
     AppUserDTO getUserByRole(String role) throws Exception;
 
+    void resetPasswordAndEmail(String email) throws Exception;
+
     String findRoleByLoginId(String usernameOrEmail) throws Exception;
 }

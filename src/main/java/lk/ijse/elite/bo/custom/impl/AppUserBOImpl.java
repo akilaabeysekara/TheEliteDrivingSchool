@@ -1,5 +1,8 @@
 package lk.ijse.elite.bo.custom.impl;
 
+import jakarta.mail.*;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import lk.ijse.elite.bo.custom.AppUserBO;
 import lk.ijse.elite.config.FactoryConfiguration;
 import lk.ijse.elite.dto.AppUserDTO;
@@ -12,6 +15,7 @@ import org.hibernate.Transaction;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class AppUserBOImpl implements AppUserBO {
 
@@ -231,6 +235,77 @@ public class AppUserBOImpl implements AppUserBO {
             throw new Exception("Failed to fetch user by role: " + role, e);
         }
     }
+
+    @Override
+    public void resetPasswordAndEmail(String email) throws Exception {
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("Email is required.");
+        }
+
+        // 1) Check email exists
+        if (!existsByEmail(email)) {
+            throw new IllegalStateException("Email address not found.");
+        }
+
+        // 2) Generate new password
+        String newPassword = generateRandomPassword();
+
+        // 3) Update DB (hash inside updatePassword)
+        boolean updated = updatePassword(email, newPassword);
+        if (!updated) throw new IllegalStateException("Failed to update password.");
+
+        // 4) Send email
+        String from = System.getenv("SMTP_FROM");
+        String appPassword = System.getenv("SMTP_APP_PASSWORD");
+        if (from == null || from.isBlank() || appPassword == null || appPassword.isBlank()) {
+            throw new IllegalStateException(
+                    "Email sending is not configured. Set SMTP_FROM and SMTP_APP_PASSWORD."
+            );
+        }
+
+        String subject = "Elite Driving School – Password Reset";
+        String body =
+                "Hello,\n\n" +
+                        "A new password has been generated for your account.\n\n" +
+                        "New Password: " + newPassword + "\n\n" +
+                        "Please log in and change it immediately.\n" +
+                        "If you didn't request this, contact support.\n\n" +
+                        "— Elite Driving School";
+
+        sendEmailGmail(from, appPassword, email, subject, body);
+    }
+
+    // ---- private helper ----
+    private void sendEmailGmail(String from, String appPassword, String to,
+                                String subject, String text) throws jakarta.mail.MessagingException {
+
+        java.util.Properties props = new java.util.Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+
+        // Use the jakarta.mail.Session explicitly and a different variable name
+        jakarta.mail.Session mailSession = jakarta.mail.Session.getInstance(
+                props,
+                new jakarta.mail.Authenticator() {
+                    @Override
+                    protected jakarta.mail.PasswordAuthentication getPasswordAuthentication() {
+                        return new jakarta.mail.PasswordAuthentication(from, appPassword);
+                    }
+                }
+        );
+
+        jakarta.mail.Message msg = new jakarta.mail.internet.MimeMessage(mailSession);
+        msg.setFrom(new jakarta.mail.internet.InternetAddress(from));
+        msg.setRecipients(jakarta.mail.Message.RecipientType.TO,
+                jakarta.mail.internet.InternetAddress.parse(to));
+        msg.setSubject(subject);
+        msg.setText(text);
+
+        jakarta.mail.Transport.send(msg);
+    }
+
 
     @Override
     public String findRoleByLoginId(String usernameOrEmail) throws Exception {

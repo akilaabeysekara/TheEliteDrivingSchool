@@ -86,6 +86,8 @@
                   <Label prefHeight="68.0" prefWidth="286.0" />
                   <Label prefHeight="68.0" prefWidth="286.0" />
                   <Label prefHeight="68.0" prefWidth="286.0" />
+                  <Label prefHeight="68.0" prefWidth="286.0" />
+                  <Label prefHeight="68.0" prefWidth="286.0" />
                   <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#btnLogoutOnAction" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #000032;" text="Logout  " textFill="#ff7979">
                      <font>
                         <Font name="System Bold" size="18.0" />
