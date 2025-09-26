@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import lk.ijse.elite.security.SessionContext;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -110,6 +111,18 @@ public class DashboardController {
         }
     }
 
+    private void applyRoleVisibility(String role) {
+        if ("RECEPTIONIST".equalsIgnoreCase(role)) {
+            btnUser.setVisible(false);
+            btnInstructors.setVisible(false);
+            btnCourses.setVisible(false);
+            // btnUser.setManaged(false);
+            // btnInstructors.setManaged(false);
+            // btnCourses.setManaged(false);
+        }
+    }
+
+
     private void navigateTo(String path) {
         try {
             ancMainContainer.getChildren().clear();
@@ -142,6 +155,9 @@ public class DashboardController {
         resetButtons();
         btnDashboard.setStyle(ACTIVE_STYLE);
         lblDate.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")));
+
+        String role = SessionContext.getRole();
+        applyRoleVisibility(role);
     }
 
     private void resetButtons() {
