@@ -2,6 +2,7 @@ package lk.ijse.elite.config;
 
 import lk.ijse.elite.entity.AppUser;
 import lk.ijse.elite.entity.Course;
+import lk.ijse.elite.entity.Instructor;
 import lk.ijse.elite.entity.Student;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -19,6 +20,8 @@ public class FactoryConfiguration {
             configuration.addAnnotatedClass(AppUser.class);
             configuration.addAnnotatedClass(Student.class);
             configuration.addAnnotatedClass(Course.class);
+            configuration.addAnnotatedClass(Instructor.class);
+
 
             sessionFactory = configuration.buildSessionFactory();
         } catch (Exception e) {
