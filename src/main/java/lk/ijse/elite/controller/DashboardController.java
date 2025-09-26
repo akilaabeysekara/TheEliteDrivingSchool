@@ -8,7 +8,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
-import lk.ijse.elite.security.SessionContext;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -145,7 +144,27 @@ public class DashboardController {
         btnDashboard.setStyle(ACTIVE_STYLE);
         lblDate.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")));
 
+
     }
+
+    private void applyRoleVisibility(String role) {
+        if ("RECEPTIONIST".equalsIgnoreCase(role)) {
+            btnUser.setVisible(false);
+            btnInstructors.setVisible(false);
+            btnCourses.setVisible(false);
+            // Optional: also disable to keep layout spacing
+             btnUser.setManaged(false);
+             btnInstructors.setManaged(false);
+             btnCourses.setManaged(false);
+        }
+    }
+
+
+    public void initForRole(String role) {
+        applyRoleVisibility(role);
+    }
+
+
 
     private void resetButtons() {
         btnDashboard.setStyle(DEFAULT_STYLE);

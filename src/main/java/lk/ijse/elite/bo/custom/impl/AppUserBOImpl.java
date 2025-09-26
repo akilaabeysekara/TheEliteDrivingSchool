@@ -251,6 +251,7 @@ public class AppUserBOImpl implements AppUserBO {
         }
     }
 
+
     // ---------- utils ----------
 
     private String defaultRole(String role) {

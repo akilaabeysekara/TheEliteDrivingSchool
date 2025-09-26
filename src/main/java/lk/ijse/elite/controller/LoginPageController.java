@@ -12,7 +12,6 @@ import javafx.scene.layout.AnchorPane;
 import lk.ijse.elite.bo.BOFactory;
 import lk.ijse.elite.bo.BOFactory.BOType;
 import lk.ijse.elite.bo.custom.AppUserBO;
-import lk.ijse.elite.security.SessionContext;
 
 import java.io.IOException;
 
@@ -64,9 +63,17 @@ public class LoginPageController {
             // Accept username OR email in the same field
             boolean ok = appUserBO.verifyLogin(username, password);
             if (ok) {
-                String role = appUserBO.findRoleByLoginId(usernameOrEmail);
-                SessionContext.setRole(role);
-                navigateTo("/view/Dashboard.fxml");
+                String role = appUserBO.findRoleByLoginId(username);
+
+                ancMainContainer.getChildren().clear();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Dashboard.fxml"));
+                AnchorPane pane = loader.load();
+                DashboardController controller = loader.getController();
+                controller.initForRole(role);
+                pane.prefWidthProperty().bind(ancMainContainer.widthProperty());
+                pane.prefHeightProperty().bind(ancMainContainer.heightProperty());
+                ancMainContainer.getChildren().add(pane);
+
             } else {
                 new Alert(Alert.AlertType.ERROR, "Invalid credentials!", ButtonType.OK).show();
             }
