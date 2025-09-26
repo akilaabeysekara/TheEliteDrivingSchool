@@ -1,126 +1,110 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="900.0"
-            style="-fx-background-color: #d2dae2;"
-            xmlns="http://javafx.com/javafx/21"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="lk.ijse.elite.controller.OpenPageController">
+<AnchorPane prefHeight="850.0" prefWidth="1300.0" style="-fx-background-color: #d2dae2;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.elite.controller.OpenPageController">
 
     <children>
-        <VBox spacing="20"
-              AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20"
-              AnchorPane.rightAnchor="20" AnchorPane.bottomAnchor="20">
+        <VBox spacing="20" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20">
 
             <!-- Header -->
-            <HBox alignment="CENTER_LEFT" spacing="10"
-                  style="-fx-background-color: #00003E; -fx-background-radius: 5;">
-                <Label text="Welcome 👋  |  Overview"
-                       style="-fx-text-fill: white; -fx-padding: 15;">
-                    <font><Font name="System Bold" size="22"/></font>
+            <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #00003E; -fx-background-radius: 5;">
+                <Label style="-fx-text-fill: white; -fx-padding: 15;" text="Welcome 👋  |  Overview">
+                    <font><Font name="System Bold" size="22" /></font>
                 </Label>
             </HBox>
 
             <!-- Stat tiles -->
-            <GridPane hgap="15" vgap="15">
+            <GridPane hgap="15" prefHeight="284.0" prefWidth="1260.0" vgap="15">
                 <columnConstraints>
-                    <ColumnConstraints percentWidth="33"/>
-                    <ColumnConstraints percentWidth="34"/>
-                    <ColumnConstraints percentWidth="33"/>
+                    <ColumnConstraints percentWidth="33" />
+                    <ColumnConstraints percentWidth="34" />
+                    <ColumnConstraints percentWidth="33" />
                 </columnConstraints>
 
                 <!-- Total Students -->
-                <VBox GridPane.columnIndex="0" GridPane.rowIndex="0"
-                      spacing="6"
-                      style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 16;
-                             -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.10), 10, 0, 0, 0);">
+                <VBox spacing="6" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 16;                              -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.10), 10, 0, 0, 0);" GridPane.columnIndex="0" GridPane.rowIndex="0">
                     <Label text="Total Students">
-                        <font><Font name="Segoe UI Semibold" size="14"/></font>
+                        <font><Font name="Segoe UI Semibold" size="14" /></font>
                     </Label>
-                    <Label fx:id="lblTotalStudents" text="0"
-                           style="-fx-text-fill:#2c3e50;">
-                        <font><Font name="System Bold" size="28"/></font>
+                    <Label fx:id="lblTotalStudents" style="-fx-text-fill:#2c3e50;" text="0">
+                        <font><Font name="System Bold" size="28" /></font>
                     </Label>
                 </VBox>
 
                 <!-- Total Courses -->
-                <VBox GridPane.columnIndex="1" GridPane.rowIndex="0"
-                      spacing="6"
-                      style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 16;
-                             -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.10), 10, 0, 0, 0);">
+                <VBox spacing="6" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 16;                              -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.10), 10, 0, 0, 0);" GridPane.columnIndex="1" GridPane.rowIndex="0">
                     <Label text="Total Courses">
-                        <font><Font name="Segoe UI Semibold" size="14"/></font>
+                        <font><Font name="Segoe UI Semibold" size="14" /></font>
                     </Label>
-                    <Label fx:id="lblTotalCourses" text="0"
-                           style="-fx-text-fill:#2c3e50;">
-                        <font><Font name="System Bold" size="28"/></font>
+                    <Label fx:id="lblTotalCourses" style="-fx-text-fill:#2c3e50;" text="0">
+                        <font><Font name="System Bold" size="28" /></font>
                     </Label>
                 </VBox>
 
                 <!-- Total Instructors -->
-                <VBox GridPane.columnIndex="2" GridPane.rowIndex="0"
-                      spacing="6"
-                      style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 16;
-                             -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.10), 10, 0, 0, 0);">
+                <VBox spacing="6" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 16;                              -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.10), 10, 0, 0, 0);" GridPane.columnIndex="2" GridPane.rowIndex="0">
                     <Label text="Total Instructors">
-                        <font><Font name="Segoe UI Semibold" size="14"/></font>
+                        <font><Font name="Segoe UI Semibold" size="14" /></font>
                     </Label>
-                    <Label fx:id="lblTotalInstructors" text="0"
-                           style="-fx-text-fill:#2c3e50;">
-                        <font><Font name="System Bold" size="28"/></font>
+                    <Label fx:id="lblTotalInstructors" style="-fx-text-fill:#2c3e50;" text="0">
+                        <font><Font name="System Bold" size="28" /></font>
                     </Label>
                 </VBox>
 
                 <!-- Active Enrollments -->
-                <VBox GridPane.columnIndex="0" GridPane.rowIndex="1"
-                      spacing="6"
-                      style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 16;
-                             -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.10), 10, 0, 0, 0);">
+                <VBox spacing="6" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 16;                              -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.10), 10, 0, 0, 0);" GridPane.columnIndex="0" GridPane.rowIndex="1">
                     <Label text="Active Enrollments">
-                        <font><Font name="Segoe UI Semibold" size="14"/></font>
+                        <font><Font name="Segoe UI Semibold" size="14" /></font>
                     </Label>
-                    <Label fx:id="lblActiveEnrollments" text="0"
-                           style="-fx-text-fill:#2c3e50;">
-                        <font><Font name="System Bold" size="28"/></font>
+                    <Label fx:id="lblActiveEnrollments" style="-fx-text-fill:#2c3e50;" text="0">
+                        <font><Font name="System Bold" size="28" /></font>
                     </Label>
                 </VBox>
 
                 <!-- Completed Enrollments -->
-                <VBox GridPane.columnIndex="1" GridPane.rowIndex="1"
-                      spacing="6"
-                      style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 16;
-                             -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.10), 10, 0, 0, 0);">
+                <VBox prefHeight="294.0" prefWidth="418.0" spacing="6" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 16;                              -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.10), 10, 0, 0, 0);" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <Label text="Completed Enrollments">
-                        <font><Font name="Segoe UI Semibold" size="14"/></font>
+                        <font><Font name="Segoe UI Semibold" size="14" /></font>
                     </Label>
-                    <Label fx:id="lblCompletedEnrollments" text="0"
-                           style="-fx-text-fill:#2c3e50;">
-                        <font><Font name="System Bold" size="28"/></font>
+                    <Label fx:id="lblCompletedEnrollments" style="-fx-text-fill:#2c3e50;" text="0">
+                        <font><Font name="System Bold" size="28" /></font>
                     </Label>
                 </VBox>
 
                 <!-- Total Upfront (LKR) -->
-                <VBox GridPane.columnIndex="2" GridPane.rowIndex="1"
-                      spacing="6"
-                      style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 16;
-                             -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.10), 10, 0, 0, 0);">
+                <VBox spacing="6" style="-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 16;                              -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.10), 10, 0, 0, 0);" GridPane.columnIndex="2" GridPane.rowIndex="1">
                     <Label text="Total Upfront (LKR)">
-                        <font><Font name="Segoe UI Semibold" size="14"/></font>
+                        <font><Font name="Segoe UI Semibold" size="14" /></font>
                     </Label>
-                    <Label fx:id="lblTotalUpfront" text="0.00"
-                           style="-fx-text-fill:#2c3e50;">
-                        <font><Font name="System Bold" size="28"/></font>
+                    <Label fx:id="lblTotalUpfront" style="-fx-text-fill:#2c3e50;" text="0.00">
+                        <font><Font name="System Bold" size="28" /></font>
                     </Label>
                 </VBox>
+            <rowConstraints>
+               <RowConstraints maxHeight="139.0" minHeight="104.0" prefHeight="124.0" />
+               <RowConstraints maxHeight="155.0" minHeight="120.0" prefHeight="135.0" />
+            </rowConstraints>
             </GridPane>
 
             <!-- Tip box -->
-            <VBox spacing="6"
-                  style="-fx-background-color: rgba(255,255,255,0.85); -fx-background-radius: 8; -fx-padding: 16;">
-                <Label text="Tip: Click the sidebar to manage Students, Courses, Instructors, Enrollments, Payments."/>
+            <VBox alignment="BOTTOM_CENTER" prefHeight="411.0" prefWidth="1260.0" spacing="6" style="-fx-background-color: rgba(255,255,255,0.85); -fx-background-radius: 8; -fx-padding: 16;">
+            <children>
+               <ImageView fitHeight="384.0" fitWidth="597.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@../images/open_page_image.png" />
+                  </image>
+               </ImageView>
+            </children>
             </VBox>
 
         </VBox>
