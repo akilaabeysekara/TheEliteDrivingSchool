@@ -1,11 +1,6 @@
 package lk.ijse.elite.config;
 
-import lk.ijse.elite.entity.AppUser;
-import lk.ijse.elite.entity.Course;
-import lk.ijse.elite.entity.Instructor;
-import lk.ijse.elite.entity.Student;
-import lk.ijse.elite.entity.Enrollment;
-import lk.ijse.elite.entity.EnrollmentId;
+import lk.ijse.elite.entity.*;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -25,6 +20,11 @@ public class FactoryConfiguration {
             cfg.addAnnotatedClass(Student.class);
             cfg.addAnnotatedClass(Course.class);
             cfg.addAnnotatedClass(Instructor.class);
+            cfg.addAnnotatedClass(Lesson.class);
+            cfg.addAnnotatedClass(Payment.class);
+            cfg.addAnnotatedClass(Enrollment.class);
+
+
 
             // --- Enrollments (fixes "not an @Entity" error) ---
             cfg.addAnnotatedClass(Enrollment.class);

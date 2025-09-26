@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="ancMainContainerPlus" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.elite.controller.DashboardController">
+<AnchorPane fx:id="ancMainContainerPlus" prefHeight="900.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.elite.controller.DashboardController">
    <children>
       <AnchorPane prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #000032;" AnchorPane.leftAnchor="287.0" AnchorPane.rightAnchor="0.0">
          <children>
@@ -21,23 +21,27 @@
                         <Font name="System Bold" size="21.0" />
                      </font>
                   </Label>
-                  <Label prefWidth="100.0" />
+                  <Label prefHeight="18.0" prefWidth="34.0" />
                </children>
             </HBox>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="ancMainContainer" layoutX="212.0" layoutY="8.0" prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: #7a239d;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="287.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0" />
-      <VBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="1100.0" prefWidth="287.0" style="-fx-background-color: #000032;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <padding>
-            <Insets top="20.0" />
-         </padding>
+      <AnchorPane fx:id="ancMainContainer" layoutX="212.0" layoutY="8.0" prefHeight="414.0" prefWidth="313.0" style="-fx-background-color: #7a239d;" AnchorPane.bottomAnchor="-3.0" AnchorPane.leftAnchor="287.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0" />
+      <VBox alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" prefHeight="800.0" prefWidth="287.0" style="-fx-background-color: #000032;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <ImageView fitHeight="240.0" fitWidth="126.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/EliteLogo.png" />
-               </image>
-            </ImageView>
-            <VBox alignment="CENTER" prefHeight="793.0" prefWidth="287.0">
+            <VBox alignment="TOP_CENTER" prefHeight="199.0" prefWidth="287.0">
+               <children>
+                  <ImageView fitHeight="106.0" fitWidth="195.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/EliteLogo.png" />
+                     </image>
+                  </ImageView>
+               </children>
+               <padding>
+                  <Insets top="20.0" />
+               </padding>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="564.0" prefWidth="287.0" spacing="20.0">
                <children>
                   <Button fx:id="btnDashboard" mnemonicParsing="false" onAction="#btnDashboardOnAction" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #000032;" text="     Dashboard" textFill="#74b9ff">
                      <font>
@@ -79,7 +83,9 @@
                         <Font name="System Bold" size="18.0" />
                      </font>
                   </Button>
-                  <Label prefHeight="100.0" prefWidth="286.0" />
+                  <Label prefHeight="68.0" prefWidth="286.0" />
+                  <Label prefHeight="68.0" prefWidth="286.0" />
+                  <Label prefHeight="68.0" prefWidth="286.0" />
                   <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#btnLogoutOnAction" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #000032;" text="Logout  " textFill="#ff7979">
                      <font>
                         <Font name="System Bold" size="18.0" />
