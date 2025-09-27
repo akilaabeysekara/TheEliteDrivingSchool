@@ -1,10 +1,13 @@
 package lk.ijse.elite.bo.custom.impl;
 
+import lk.ijse.elite.bo.BOFactory;
 import lk.ijse.elite.bo.custom.EnrollmentBO;
+import lk.ijse.elite.bo.custom.PaymentBO;
 import lk.ijse.elite.config.FactoryConfiguration;
 import lk.ijse.elite.dto.EnrollmentDTO;
 import lk.ijse.elite.entity.Course;
 import lk.ijse.elite.entity.Enrollment;
+import lk.ijse.elite.entity.Payment;
 import lk.ijse.elite.entity.Student;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -12,6 +15,8 @@ import org.hibernate.Transaction;
 import java.util.List;
 
 public class EnrollmentBOImpl implements EnrollmentBO {
+
+    private final PaymentBO paymentBO = BOFactory.getInstance().getBO(BOFactory.BOType.PAYMENT);
 
     @Override
     public String getNextId() throws Exception {
@@ -49,12 +54,12 @@ public class EnrollmentBOImpl implements EnrollmentBO {
         try (Session s = FactoryConfiguration.getInstance().getSession()) {
             tx = s.beginTransaction();
 
-            // Validate refs
+            // refs
             Student st = s.get(Student.class, dto.getStudentId());
             Course  c  = s.get(Course.class, dto.getCourseId());
             if (st == null || c == null) throw new IllegalArgumentException("Invalid student/course");
 
-            // Prevent duplicate pair
+            // duplicate pair guard (same student + course)
             Long dup = s.createQuery(
                             "select count(e) from Enrollment e where e.student.studentId=:sid and e.course.courseId=:cid",
                             Long.class
@@ -63,14 +68,28 @@ public class EnrollmentBOImpl implements EnrollmentBO {
                     .uniqueResult();
             if (dup != null && dup > 0) throw new IllegalStateException("Student already enrolled for this course.");
 
-            // Assign ID if missing
+            // id
             String id = (dto.getEnrollmentId() == null || dto.getEnrollmentId().isBlank())
                     ? getNextId() : dto.getEnrollmentId();
 
-            Enrollment e = new Enrollment(
-                    id, st, c, dto.getRegDate(), dto.getUpfrontAmount(), dto.getStatus()
-            );
+            // persist enrollment
+            Enrollment e = new Enrollment(id, st, c, dto.getRegDate(), dto.getUpfrontAmount(), dto.getStatus());
             s.persist(e);
+
+            // auto-create upfront payment
+            if (dto.getUpfrontAmount() != null && dto.getUpfrontAmount().signum() > 0) {
+                String pid = paymentBO.getNextId();           // just ID generation
+                Payment upfront = new Payment(
+                        pid,
+                        e,
+                        dto.getRegDate(),                       // same day as registration
+                        dto.getUpfrontAmount(),
+                        "UPFRONT",
+                        "Auto-created on enrollment"
+                );
+                s.persist(upfront); // same session/tx
+            }
+
             tx.commit();
             return true;
         } catch (Exception ex) {
@@ -88,17 +107,19 @@ public class EnrollmentBOImpl implements EnrollmentBO {
             Enrollment e = s.get(Enrollment.class, dto.getEnrollmentId());
             if (e == null) { tx.rollback(); return false; }
 
-            // allow changing student/course with duplicate check
+            // if student/course changed, ensure no duplicate pair and set new refs
             if (!e.getStudent().getStudentId().equals(dto.getStudentId())
                     || !e.getCourse().getCourseId().equals(dto.getCourseId())) {
 
                 Long dup = s.createQuery(
-                                "select count(en) from Enrollment en where en.student.studentId=:sid and en.course.courseId=:cid and en.enrollmentId<>:id",
+                                "select count(en) from Enrollment en " +
+                                        "where en.student.studentId=:sid and en.course.courseId=:cid and en.enrollmentId<>:id",
                                 Long.class
                         ).setParameter("sid", dto.getStudentId())
                         .setParameter("cid", dto.getCourseId())
                         .setParameter("id", dto.getEnrollmentId())
                         .uniqueResult();
+
                 if (dup != null && dup > 0) throw new IllegalStateException("Student already enrolled for this course.");
 
                 Student st = s.get(Student.class, dto.getStudentId());
@@ -109,9 +130,39 @@ public class EnrollmentBOImpl implements EnrollmentBO {
                 e.setCourse(c);
             }
 
+            // update enrollment fields
             e.setRegDate(dto.getRegDate());
             e.setUpfrontAmount(dto.getUpfrontAmount());
             e.setStatus(dto.getStatus());
+
+            // keep the auto upfront payment in sync (create/update/delete)
+            if (dto.getUpfrontAmount() != null) {
+                Payment upfront = s.createQuery(
+                                "from Payment p where p.enrollment = :en and p.method = :m",
+                                Payment.class
+                        ).setParameter("en", e)
+                        .setParameter("m", "UPFRONT")
+                        .setMaxResults(1)
+                        .uniqueResult();
+
+                if (upfront == null && dto.getUpfrontAmount().signum() > 0) {
+                    String pid = paymentBO.getNextId();
+                    upfront = new Payment(
+                            pid, e, dto.getRegDate(),
+                            dto.getUpfrontAmount(), "UPFRONT",
+                            "Auto-created on enrollment update"
+                    );
+                    s.persist(upfront);
+                } else if (upfront != null) {
+                    if (dto.getUpfrontAmount().signum() <= 0) {
+                        s.remove(upfront); // remove if now zero/negative
+                    } else {
+                        upfront.setAmount(dto.getUpfrontAmount());
+                        upfront.setPaidDate(dto.getRegDate());
+                        s.merge(upfront);
+                    }
+                }
+            }
 
             s.merge(e);
             tx.commit();
@@ -129,6 +180,7 @@ public class EnrollmentBOImpl implements EnrollmentBO {
             tx = s.beginTransaction();
             Enrollment e = s.get(Enrollment.class, enrollmentId);
             if (e == null) { tx.commit(); return false; }
+
             s.remove(e);
             tx.commit();
             return true;
