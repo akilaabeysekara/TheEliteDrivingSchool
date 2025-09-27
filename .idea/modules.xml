@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/EliteFX.iml" filepath="$PROJECT_DIR$/EliteFX.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Elite-ORM.iml" filepath="$PROJECT_DIR$/Elite-ORM.iml" />
     </modules>
   </component>
 </project>
